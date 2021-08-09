@@ -3,7 +3,8 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 //Components
 import {WishListScreen,HomeScreen,ProductScreen,ProfileScreen,CartScreen} from "../screens";
-import {Footer,NavBar} from "../components" 
+import Footer from "./Footer";
+import NavBar from "./NavBar";
 
 
 export default function Navigator({screen}:{screen:string}) {

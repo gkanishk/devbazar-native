@@ -12,6 +12,7 @@ type ProductStateType = {
         quantity: number, 
         attributes: any
     }[],
+    isLoading: Boolean,
     filteredProducts: {
         id: string,
         name: string,
@@ -33,6 +34,7 @@ type ProductStateType = {
 
 const initialState:ProductStateType = {
     products: [],
+    isLoading: true,
     filteredProducts: [],
     filters: {
         sortBy: "",
@@ -50,6 +52,8 @@ export const productSlice = createSlice({
     reducers: {
         setProducts: (state,action)=>{
             state.products=action.payload;
+            state.filteredProducts=action.payload;
+            state.isLoading = false;
         },
         setSortByFilter: (state,action)=>{
             state.filters.sortBy = action.payload;

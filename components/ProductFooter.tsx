@@ -31,6 +31,12 @@ export default function ProductFooter() {
     const dispatch = useAppDispatch();
     const filters = useAppSelector(getFilters);
 
+    useEffect(()=>{
+        return () => {
+            dispatch(clearFilter())
+        }
+    },[])
+    
     useEffect(() => {
         dispatch(filterProducts());
     }, [filters])
