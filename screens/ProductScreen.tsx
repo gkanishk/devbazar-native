@@ -1,11 +1,12 @@
 import React from "react";
 import { Text, ScrollView, View, Dimensions, TouchableOpacity, Platform } from "react-native";
 import { useAppSelector } from "../app/hook";
-import { getProducts, getFilteredProduct } from "../features/Products/products.slice";
+import { getFilteredProduct } from "../features/Products/products.slice";
 import { Card, Button, Image } from 'react-native-elements'
 import tw from "tailwind-react-native-classnames";
 import AntIcon from "react-native-vector-icons/AntDesign";
 import ProductFooter from "../components/ProductFooter";
+import { getDiscounterPrice } from "../features/Products/product.service";
 
 
 export default function ProductScreen() {
@@ -16,7 +17,7 @@ export default function ProductScreen() {
             {
                 !isProductLoading ?
                     <>
-                        <ScrollView style={tw`py-2`}>
+                        <ScrollView style={tw`py-2 flex-1`}>
                             {
                                 filteredProducts.length > 0 ?
                                     <View
@@ -64,7 +65,7 @@ export default function ProductScreen() {
                                                         {name}
                                                     </Text>
                                                     <View style={tw`flex flex-row items-center`}>
-                                                        <Text style={tw`text-sm`}>Rs. {price}{" "}</Text>
+                                                        <Text style={tw`text-sm`}>Rs. {getDiscounterPrice(price,discount)}{" "}</Text>
                                                         <Text style={tw`text-xs line-through text-gray-400`}>Rs.{price}</Text>
                                                         <Text style={tw`text-xs text-red-400`}>
                                                             {" "}({discount}%)
