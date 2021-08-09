@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity, Text, ScrollView, Dimensions } from "react-native";
 import { BottomSheet, CheckBox } from "react-native-elements";
 import tw from "tailwind-react-native-classnames";
@@ -11,12 +11,29 @@ import {
     sizesOption,
     discountOption
 } from "../assets/filter";
+import { useAppDispatch, useAppSelector } from "../app/hook";
+import { 
+    getFilters, 
+    setBrandFilter, 
+    setDiscountFilter, 
+    setSortByFilter, 
+    setIdealForFilter, 
+    setSizeFilter, 
+    setIncludeOutOfStock, 
+    clearFilter, 
+    clearSortByFilter, 
+    filterProducts 
+} from "../features/Products/products.slice";
 
 export default function ProductFooter() {
     const [showSortBy, setShowSortBy] = useState(false);
     const [showFilters, setShowFilters] = useState(false);
-    const [sortBy, setSortBy] = useState("");
-    const [includeOutOfStock, setIncludeOutOfStock] = useState(false);
+    const dispatch = useAppDispatch();
+    const filters = useAppSelector(getFilters);
+
+    useEffect(() => {
+        dispatch(filterProducts());
+    }, [filters])
     return (
         <View
             style={styles.productFooter}
@@ -58,15 +75,15 @@ export default function ProductFooter() {
                                 title={label}
                                 checkedIcon='dot-circle-o'
                                 uncheckedIcon='circle-o'
-                                checked={sortBy === value}
-                                onPress={() => setSortBy(value)}
+                                checked={filters.sortBy === value}
+                                onPress={() => dispatch(setSortByFilter(value))}
                             ></CheckBox>
                         ))
                     }
                     <CheckBox
                         title='Include Out of Stock'
-                        checked={includeOutOfStock}
-                        onPress={() => setIncludeOutOfStock(!includeOutOfStock)}
+                        checked={filters.includeOutOfStock}
+                        onPress={() => dispatch(setIncludeOutOfStock())}
                     />
                 </View>
                 <View style={tw`flex flex-row justify-end bg-white p-2`}>
@@ -80,14 +97,14 @@ export default function ProductFooter() {
                             paddingHorizontal: 10,
                             margin: 4
                         }}
-                        onPress={() => setShowSortBy(false)}
+                        onPress={()=>dispatch(clearSortByFilter())} 
                     >
                         <FAIcon
                             name="close"
                             size={15}
                         />
                         <Text style={tw`ml-2`}>
-                            Cancel
+                            Clear Sort By
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
@@ -98,13 +115,15 @@ export default function ProductFooter() {
                         padding: 2,
                         paddingHorizontal: 10,
                         margin: 4
-                    }}>
+                    }}
+                    onPress={() => setShowSortBy(false)}
+                    >
                         <FAIcon
                             name="save"
                             size={15}
                         />
                         <Text style={tw`ml-2`}>
-                            Apply
+                            Close
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -124,7 +143,10 @@ export default function ProductFooter() {
                     {
                         idealForOption.map(({label,value})=>(
                             <CheckBox
+                            key={value+label}
                                 title={label}
+                                checked={filters.idealFor.includes(value)}
+                                onPress={()=>dispatch(setIdealForFilter(value))}
                             />
                         ))
                     }
@@ -132,9 +154,12 @@ export default function ProductFooter() {
                         Brands
                     </Text>
                     {
-                        brandFilterOption.map((brand)=>(
+                        brandFilterOption.map((brand,index)=>(
                             <CheckBox
                                 title={brand}
+                                key={index+brand}
+                                checked={filters.brand.includes(brand)}
+                                onPress={()=>dispatch(setBrandFilter(brand))}
                             />
                         ))
                     }
@@ -145,6 +170,9 @@ export default function ProductFooter() {
                         discountOption.map(({label,value})=>(
                             <CheckBox
                                 title={label}
+                                key={value+label}
+                                checked={filters.discount.includes(value)}
+                                onPress={()=>dispatch(setDiscountFilter(value))}
                             />
                         ))
                     }
@@ -155,6 +183,9 @@ export default function ProductFooter() {
                         sizesOption.map(({label,value})=>(
                             <CheckBox
                                 title={label}
+                                key={value+label}
+                                checked={filters.size.includes(value)}
+                                onPress={()=>dispatch(setSizeFilter(value))}
                             />
                         ))
                     }
@@ -169,15 +200,15 @@ export default function ProductFooter() {
                             padding: 4,
                             paddingHorizontal: 10,
                             margin: 4
-                        }}
-                        onPress={() => setShowFilters(false)}
+                        }} 
+                        onPress={()=>dispatch(clearFilter())} 
                     >
                         <FAIcon
                             name="close"
                             size={15}
                         />
                         <Text style={tw`ml-2`}>
-                            Cancel
+                            Clear Filter
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
@@ -188,13 +219,15 @@ export default function ProductFooter() {
                         padding: 2,
                         paddingHorizontal: 10,
                         margin: 4
-                    }}>
+                    }}
+                    onPress={() => setShowFilters(false)}
+                    >
                         <FAIcon
                             name="save"
                             size={15}
                         />
                         <Text style={tw`ml-2`}>
-                            Apply
+                            Close
                         </Text>
                     </TouchableOpacity>
                 </View>

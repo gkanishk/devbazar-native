@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, ScrollView, View, Dimensions, TouchableOpacity } from "react-native";
 import { useAppSelector } from "../app/hook";
-import { getProducts } from "../features/Products/products.slice";
+import { getProducts, getFilteredProduct } from "../features/Products/products.slice";
 import { Card, Button, Image } from 'react-native-elements'
 import tw from "tailwind-react-native-classnames";
 import AntIcon from "react-native-vector-icons/AntDesign";
@@ -10,25 +10,32 @@ import ProductFooter from "../components/ProductFooter";
 
 export default function ProductScreen() {
     const products: Array<any> = useAppSelector(getProducts);
+    const filteredProducts: Array<any> = useAppSelector(getFilteredProduct);
     return (
         <>
-            <ScrollView style={tw`py-2`}>
+            {
+                products.length>0?
+                <>
+                <ScrollView style={tw`py-2`}>
                 <View
                     style={{
                         display: "flex",
                         flexDirection: "row",
                         flexWrap: "wrap",
-                        justifyContent: "space-evenly",
-                        position: "relative"
+                        justifyContent: "space-between",
+                        position: "relative",
+                        flexGrow: 1,
+                        paddingHorizontal: 10
                     }}
                 >
                     {
-                        products.map(({ name, id, category, price, discount, quantity, attributes: { brand, img, for: idealFor } }) => (
+                        filteredProducts.map(({ name, id, category, price, discount, quantity, attributes: { brand, img, for: idealFor } }) => (
                             <Card
                                 containerStyle={{
-                                    width: "45%",
+                                    width: "48%",
                                     margin: 0,
-                                    marginBottom: 10
+                                    marginBottom: 10,
+                                    
                                 }}
                                 key={`${id}-${name}`}
                             >
@@ -79,12 +86,22 @@ export default function ProductScreen() {
                                         }}
                                     />
                                 </View>
+                                {   quantity===0&&
+                                    <Text style={tw`text-xs text-right text-gray-500`}>
+                                    Out Of Stock
+                                    </Text>
+                                }
                             </Card>
                         ))
                     }
                 </View>
             </ScrollView>
             <ProductFooter/>
+            </>
+                :<Text>
+                    Loading
+                </Text>
+            }
         </>
     )
 }
