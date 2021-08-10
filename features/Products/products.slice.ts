@@ -1,35 +1,38 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
+import { getfilterProducts } from "./product.service";
 
-type ProductStateType = {
-    products: {
-        id: string,
-        name: string,
-        category: string,
-        price: number,
-        discount: number,
-        quantity: number,
-        attributes: any
-    }[],
-    isLoading: Boolean,
-    filteredProducts: {
-        id: string,
-        name: string,
-        category: string,
-        price: number,
-        discount: number,
-        quantity: number,
-        attributes: any
-    }[],
-    filters: {
-        sortBy: string,
-        discount: number[],
-        size: string[],
-        brand: string[],
-        idealFor: string[],
-        includeOutOfStock: boolean
+export type ProductType = {
+    id: string,
+    name: string,
+    category: string,
+    price: number,
+    discount: number,
+    quantity: number,
+    desc: string,
+    attributes: {
+        for: string,
+        img: string,
+        brand: string,
+        sizes: string[]
     }
+}
+
+export type FiltersType = {
+    sortBy: string,
+    discount: number[],
+    size: string[],
+    brand: string[],
+    idealFor: string[],
+    includeOutOfStock: boolean
+}
+
+export type ProductStateType = {
+    products: ProductType[],
+    isLoading: Boolean,
+    filteredProducts: ProductType[],
+    filters: FiltersType
 };
 
 const initialState: ProductStateType = {
@@ -110,23 +113,7 @@ export const productSlice = createSlice({
             }
         },
         filterProducts: (state) => {
-            let tempArray = [...state.products];
-            if (state.filters.brand.length > 0)
-                tempArray = tempArray.filter(({ attributes }) => (state.filters.brand.includes(attributes.brand)))
-            if (state.filters.idealFor.length > 0)
-                tempArray = tempArray.filter(({ attributes }) => (state.filters.idealFor.includes(attributes.for)));
-            if (state.filters.size.length > 0)
-                tempArray = tempArray.filter(({ attributes }) => ((state.filters.size.filter(element => attributes.sizesAvailable.includes(element))).length > 0));
-            if (state.filters.discount.length > 0)
-                tempArray = tempArray.filter(({ discount }) => (state.filters.discount.includes(discount)));
-            if (state.filters.sortBy === "low") {
-                tempArray = tempArray.sort((a, b) => a.price - b.price);
-            } else if (state.filters.sortBy === "high") {
-                tempArray = tempArray.sort((a, b) => b.price - a.price);
-            }
-            if (!state.filters.includeOutOfStock)
-                tempArray = tempArray.filter(({ quantity }) => quantity > 0)
-            state.filteredProducts = tempArray;
+            state.filteredProducts = getfilterProducts(state.filters,state.products);
         }
     }
 })
