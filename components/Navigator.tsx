@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {WishListScreen,HomeScreen,ProductScreen,ProfileScreen,CartScreen} from "../screens";
 import Footer from "./Footer";
 import NavBar from "./NavBar";
+import LoginScreen from "../screens/LoginScreen";
 
 
 export default function Navigator({screen}:{screen:string}) {
@@ -20,6 +21,7 @@ export default function Navigator({screen}:{screen:string}) {
                     <Stack.Screen name="Profile" component={ProfileScreen} />
                 </Stack.Group>
                 <Stack.Group>
+                    <Stack.Screen name="Login" component={LoginScreen} />
                     <Stack.Screen name="Product" component={ProductScreen} />
                     <Stack.Screen name="Cart" component={CartScreen} />
                     <Stack.Screen name="WishList" component={WishListScreen} />

@@ -1,37 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
-import {Navigator} from './components';
+import Navigator from './components/Navigator';
 import { Provider } from 'react-redux'
-import {store} from './app/store'
+import { store } from './app/store'
 import useAxios from './hooks/useAxios';
-import {setProducts} from "./features/Products/products.slice";
+import { setProducts } from "./features/Products/products.slice";
+import { useSecureStorage } from './hooks/useSecureStorage';
+import { setLogin } from './features/User/user.slice';
+import { ToastProvider } from 'react-native-styled-toast';
+import { ThemeProvider } from 'styled-components';
+import theme from './theme'
 
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<string>("")
   const navigationRef = useNavigationContainerRef();
-  const {response,isLoading} = useAxios("GET","/products");
+  const { response, isLoading } = useAxios("GET", "/products");
 
   useEffect(() => {
-    if(!isLoading)
-    store.dispatch(setProducts(response?.data?.response || []));
-  }, [response,isLoading])
+    (async () => {
+      const token = await useSecureStorage.getStorage("accessToken");
+      const userDetails = await useSecureStorage.getStorage("userDetails");
+      if(token)
+      store.dispatch(setLogin({token,userDetails: JSON.parse(userDetails)}));
+    })()
+  })
+
+  useEffect(() => {
+    if (!isLoading)
+      store.dispatch(setProducts(response?.data?.response || []));
+  }, [response, isLoading])
 
   return (
     <SafeAreaProvider>
       <Provider store={store}>
-        <NavigationContainer 
-        ref={navigationRef}
-        onReady={() => {
-          setCurrentScreen(navigationRef?.getCurrentRoute()?.name ?? "");
-        }}
-        onStateChange={ () => {
-          setCurrentScreen(navigationRef?.getCurrentRoute()?.name ?? "");
-        }}
-        >
-        <Navigator screen={currentScreen} />
-      </NavigationContainer>
+        <ThemeProvider theme={theme}>
+          <ToastProvider maxToasts={2} offset={16} position="BOTTOM">
+            <NavigationContainer
+              ref={navigationRef}
+              onReady={() => {
+                setCurrentScreen(navigationRef?.getCurrentRoute()?.name ?? "");
+              }}
+              onStateChange={() => {
+                setCurrentScreen(navigationRef?.getCurrentRoute()?.name ?? "");
+              }}
+            >
+              <Navigator screen={currentScreen} />
+            </NavigationContainer>
+          </ToastProvider>
+        </ThemeProvider>
       </Provider>
     </SafeAreaProvider>
   );
