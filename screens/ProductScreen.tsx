@@ -1,8 +1,8 @@
 import React from "react";
-import { Text, ScrollView, View, Dimensions, TouchableOpacity, Platform } from "react-native";
+import { Text, ScrollView, View, Dimensions, TouchableOpacity, Platform, Image } from "react-native";
 import { useAppSelector } from "../app/hook";
 import { getFilteredProduct } from "../features/Products/products.slice";
-import { Card, Button, Image } from 'react-native-elements'
+import { Card, Button } from 'react-native-elements'
 import tw from "tailwind-react-native-classnames";
 import AntIcon from "react-native-vector-icons/AntDesign";
 import ProductFooter from "../components/ProductFooter";

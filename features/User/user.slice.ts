@@ -30,6 +30,16 @@ export const userSlice = createSlice({
         },
         setWishlist: (state, action) => {
             state.wishList = action.payload;
+        },
+        resetUser: (state) => {
+            state.isLoggined = false;
+            state.accessToken = "";
+            state.userDetails = {
+                name: "",
+                email: ""
+            }
+            state.cart = [];
+            state.wishList = [];
         }
     }
 })
@@ -37,7 +47,8 @@ export const userSlice = createSlice({
 export const {
     setCart,
     setLogin,
-    setWishlist
+    setWishlist,
+    resetUser
 } = userSlice.actions;
 
 export const getUserLoginned = (state: RootState) => state.user.isLoggined;

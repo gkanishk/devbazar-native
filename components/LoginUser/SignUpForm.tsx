@@ -12,25 +12,22 @@ export default function SignUpForm({ changeForm }: { changeForm: Function }) {
     const [name, setName] = useState<String>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [ isLoading, setLoading ] = useState(false);
 
     const dispatch = useAppDispatch();
     const route = useRoute();
     const { toast } = useToast();
 
     const authenticateUser = async () => {
-        useEffect(() => {
-            return () => {
-                setEmail("");
-                setName("");
-                setPassword("");
-            }
-        }, [])
+        setLoading(true);
         try {
-            if (email.length === 0 || password.length === 0 || name.length === 0)
+            if (email.length === 0 || password.length === 0 || name.length === 0){
                 toast({
                     message: "Please enter all details",
                     intent: "ERROR"
                 })
+                setLoading(false);
+            }
             const response = await getAxiosClient("").post(`/user/signup`, { name, email: email.toLowerCase(), password });
             if (response.data?.statusCode === 200) {
                 dispatch(setLogin({
@@ -44,12 +41,14 @@ export default function SignUpForm({ changeForm }: { changeForm: Function }) {
                 toast({
                     message: 'SignUp Successful.'
                 });
+                setLoading(false);
             }
         } catch (error) {
             toast({
                 message: "Login Failed! Please check details",
                 intent: "ERROR"
-            })
+            });
+            setLoading(false);
         }
     }
 
@@ -85,6 +84,7 @@ export default function SignUpForm({ changeForm }: { changeForm: Function }) {
                     title="Sign-Up"
                     containerStyle={tw`m-2`}
                     onPress={authenticateUser}
+                    loading={isLoading}
                 />
             </View>
             <Text style={tw`text-center m-8 flex flex-row items-center`}>

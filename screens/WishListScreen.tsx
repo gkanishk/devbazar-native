@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 const LoginIcon = require("../assets/login.png");
 export default function WishListScreen() {
     const isUserLoginned = useAppSelector(getUserLoginned);
-    const naavigation = useNavigation();
+    const navigation = useNavigation();
     return (
         <>
         {
@@ -40,7 +40,7 @@ export default function WishListScreen() {
                 containerStyle={tw`mt-4`}
                 buttonStyle={tw`px-6 py-1`}
                 // @ts-ignore
-                onPress={()=> naavigation.navigate("Login")}
+                onPress={()=> navigation.navigate("Login",{referer: "WishList"})}
                 />
             </View>
         }
