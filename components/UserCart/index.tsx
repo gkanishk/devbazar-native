@@ -9,7 +9,7 @@ import ListCartItems from "./ListCartItems";
 const emptyCart = require("../../assets/emptyCart.png");
 
 export default function UserCart() {
-    const navigation = useNavigation();
+    const navigation:any = useNavigation();
     const cartItems = useAppSelector(getCart);
     return (
         <>
