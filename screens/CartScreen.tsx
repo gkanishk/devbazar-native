@@ -5,6 +5,7 @@ import { getUserLoginned } from "../features/User/user.slice";
 import tw from "tailwind-react-native-classnames";
 import { Button } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
+import UserCart from "../components/UserCart";
 const LoginIcon = require("../assets/cart.png");
 export default function CartScreen() {
     const isUserLoginned = useAppSelector(getUserLoginned);
@@ -13,10 +14,8 @@ export default function CartScreen() {
         <>
             {
                 isUserLoginned ?
-                    <View>
-                        <Text>
-                            Cart Screen {JSON.stringify(isUserLoginned)}
-                        </Text>
+                    <View style={tw`flex flex-1 p-2`}>
+                        <UserCart/>
                     </View> :
                     <View style={tw`flex items-center flex-1 justify-center`}>
                         <Text style={tw`text-lg font-bold`}>

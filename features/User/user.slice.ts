@@ -2,8 +2,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import {useSecureStorage} from "../../hooks/useSecureStorage";
+import { ProductType } from "../Products/products.slice";
 
-const initialState = {
+export type userStateType = {
+    isLoggined: boolean,
+    accessToken: string,
+    cart: {item: ProductType, count: number}[],
+    wishList: {item: ProductType}[],
+    userDetails: {
+        name: string,
+        email: string
+    }
+}
+
+const initialState: userStateType = {
     isLoggined: false,
     accessToken: "",
     cart: [],
@@ -53,7 +65,7 @@ export const {
 
 export const getUserLoginned = (state: RootState) => state.user.isLoggined;
 export const getCart = (state: RootState) => state.user.cart;
-export const wishList = (state: RootState) => state.user.wishList;
+export const getWishList = (state: RootState) => state.user.wishList;
 export const getUserDetails = (state: RootState) => state.user.userDetails;
 export const getAccessToken = (state: RootState) => state.user.accessToken;
 

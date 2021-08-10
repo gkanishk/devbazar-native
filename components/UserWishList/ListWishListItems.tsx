@@ -1,42 +1,36 @@
 import React from "react";
-import { Text, ScrollView, View, Dimensions, TouchableOpacity, Platform, Image } from "react-native";
-import { useAppSelector } from "../app/hook";
-import { getFilteredProduct } from "../features/Products/products.slice";
-import { Card, Button } from 'react-native-elements'
+import { View, Image, Text, Dimensions, TouchableOpacity } from "react-native";
+import { Card, Button } from "react-native-elements";
 import tw from "tailwind-react-native-classnames";
-import AntIcon from "react-native-vector-icons/AntDesign";
-import ProductFooter from "../components/ProductFooter";
-import { useProductItems } from "../hooks/useProductItems";
-
-
-export default function ProductScreen() {
-    const filteredProducts: Array<any> = useAppSelector(getFilteredProduct);
-    const isProductLoading: Boolean = useAppSelector((state) => state.products.isLoading);
+import { useAppSelector } from "../../app/hook";
+import { getDiscounterPrice } from "../../features/Products/product.service";
+import { getWishList } from "../../features/User/user.slice";
+import AntIcon from "react-native-vector-icons/AntDesign"
+import { useProductItems } from "../../hooks/useProductItems";
+export default function ListWishListItems() {
+    const wishListItems = useAppSelector(getWishList);
     const userState = useAppSelector((state)=>state.user);
-    const { isItemInWishList, getDiscounterPrice, addToCartWishList } = useProductItems(userState);
+    const {removeFromWishList, moveToCart} = useProductItems(userState)
     return (
-        <>
-            {
-                !isProductLoading ?
-                    <>
-                        <ScrollView style={tw`py-2 flex-1 pb-2`}>
-                            {
-                                filteredProducts.length > 0 ?
-                                    <View
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            flexWrap: "wrap",
-                                            justifyContent: "space-between",
-                                            position: "relative",
-                                            flexGrow: 1,
-                                            paddingHorizontal: 10,
-                                            paddingBottom: 5
-                                        }}
-                                    >
-                                        {
-                                            filteredProducts.map(({ name, id, category, price, discount, quantity, attributes: { brand, img, for: idealFor } }) => (
-                                                <Card
+        <View style={tw`flex flex-1`}>
+            <Text style={tw`font-bold text-lg p-2`}>
+                My WishList ({wishListItems.length})
+            </Text>
+            <View
+            style={{
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+                position: "relative",
+                flexGrow: 1,
+                paddingHorizontal: 10,
+                paddingBottom: 5
+            }}
+            >
+                {
+                    wishListItems.map(({item:{id,quantity,discount,name,price,attributes:{img, brand}}})=>(
+                        <Card
                                                     containerStyle={{
                                                         width: "48%",
                                                         margin: 0,
@@ -58,11 +52,10 @@ export default function ProductScreen() {
                                                     <View style={tw`flex flex-row justify-between pt-2`}>
                                                         <Text style={tw`font-semibold`}>{brand}</Text>
                                                         <TouchableOpacity
-                                                        onPress={()=>addToCartWishList(id,"addToWishList")}
-                                                        disabled={isItemInWishList(id)}
+                                                        onPress={()=>removeFromWishList(id,true)}
                                                         >
                                                             <AntIcon
-                                                                name={isItemInWishList(id)?"heart":"hearto"}
+                                                                name={"delete"}
                                                                 size={18}
                                                             />
                                                         </TouchableOpacity>
@@ -79,7 +72,7 @@ export default function ProductScreen() {
                                                     </View>
                                                     <View>
                                                         <Button
-                                                            title="Add to Cart"
+                                                            title="Move to Cart"
                                                             type="outline"
                                                             containerStyle={tw`my-2 border-gray-600`}
                                                             buttonStyle={{
@@ -93,8 +86,8 @@ export default function ProductScreen() {
                                                                 color: "#000",
                                                                 fontWeight: "300"
                                                             }}
+                                                            onPress={()=>moveToCart(id)}
                                                             disabled={quantity === 0}
-                                                            onPress={()=>addToCartWishList(id,"addToCart")}
                                                         />
                                                     </View>
                                                     {quantity === 0 &&
@@ -103,30 +96,10 @@ export default function ProductScreen() {
                                                         </Text>
                                                     }
                                                 </Card>
-                                            ))
-                                        }
-                                    </View>
-                                    :
-                                    <View
-                                    style={{
-                                        display: "flex",
-                                        flex: 1,
-                                        alignItems: "center",
-                                        justifyContent: "center"
-                                    }}
-                                    >
-                                        <Text>No Product</Text>
-                                    </View>
-                            }
-                        </ScrollView>
-                        {
-                            Platform.OS !== "web" && <ProductFooter />
-                        }
-                    </>
-                    : <Text>
-                        Loading
-                    </Text>
-            }
-        </>
-    )
+                    )
+                )
+                }
+            </View>
+        </View>
+    );
 }
