@@ -11,11 +11,26 @@ const discountOption: { label: string, value: number }[] =
     { label: "30%", value: 30 },
     { label: "40%", value: 40 }
     ];
+const quantityOptions: { label: string, value: number }[] = [{
+    value: 1,
+    label: "1"
+}, {
+    value: 2,
+    label: "2"
+}, {
+    value: 3,
+    label: "3"
+}, {
+    value: 4,
+    label: "4"
+}
+];
 
 export {
     sortByOption,
     brandFilterOption,
     idealForOption,
     sizesOption,
-    discountOption
+    discountOption,
+    quantityOptions
 }

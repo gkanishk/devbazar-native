@@ -24,7 +24,7 @@ export const useProductItems=({cart,wishList,isLoggined,accessToken}:userStateTy
     const getDeliveryDate=()=> {
         const options:any = { year: 'numeric', month: 'long', day: 'numeric' };
         const currentDate = new Date();
-        const date = new Date(currentDate.setDate(currentDate.getDate() + (Math.floor(Math.random() * (10- 5 + 1)) + 5))).toLocaleString(undefined,options);
+        const date = new Date(currentDate.setDate(currentDate.getDate() + 5)).toLocaleString(undefined,options);
         return date;
     }
 
@@ -80,9 +80,10 @@ export const useProductItems=({cart,wishList,isLoggined,accessToken}:userStateTy
         await addToCartWishList(productId,"addToCart");
     }
 
-    const updateItemCount = async(count:number,productId:string, index: number)=> {
-        cart[index].count=count;
-        store.dispatch(setCart([...cart]));
+    const updateItemCount = async(count:number, index: number)=> {
+        let tempCart = JSON.parse(JSON.stringify(cart));
+        tempCart[index].count=count;
+        store.dispatch(setCart(tempCart));
     }
 
     const removeFromCart = async(index:number,showNotification: boolean) =>{

@@ -32,12 +32,12 @@ export default function ListWishListItems() {
                     wishListItems.map(({item:{id,quantity,discount,name,price,attributes:{img, brand}}})=>(
                         <Card
                                                     containerStyle={{
-                                                        width: "48%",
+                                                        width: "49%",
                                                         margin: 0,
                                                         marginBottom: 10,
 
                                                     }}
-                                                    key={`${id}-${name}`}
+                                                    key={`${id}-${name}-wishlist`}
                                                 >
                                                     <Image
                                                         style={{
@@ -67,7 +67,7 @@ export default function ListWishListItems() {
                                                         <Text style={tw`text-sm`}>Rs. {getDiscounterPrice(price,discount)}{" "}</Text>
                                                         <Text style={tw`text-xs line-through text-gray-400`}>Rs.{price}</Text>
                                                         <Text style={tw`text-xs text-red-400`}>
-                                                            {" "}({discount}%)
+                                                            ({discount}%)
                                                         </Text>
                                                     </View>
                                                     <View>

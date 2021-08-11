@@ -12,7 +12,7 @@ export default function ProfileScreen() {
     const dispatch = useAppDispatch();
     const isUserLoggined = useAppSelector(getUserLoginned);
     const userDetails = useAppSelector(getUserDetails);
-    const navigation = useNavigation();
+    const navigation:any = useNavigation();
     const logoutUser = async () => {
         await useSecureStorage.deleteItemFromStorage("accessToken");
         await useSecureStorage.deleteItemFromStorage("userDetails");
@@ -24,7 +24,7 @@ export default function ProfileScreen() {
     return (
         <>
             <SafeAreaView style={{ display: "flex", flex: 1, padding: 30}}>
-                <Text style={tw`font-bold text-3xl mb-6 text-center`}>
+                <Text style={tw`font-bold text-3xl mb-6 mt-2 text-center`}>
                     Profile
                 </Text>
                 <Text style={tw`font-bold text-xl mb-2 mt-8 text-center`}>
