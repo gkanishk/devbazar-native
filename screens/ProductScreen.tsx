@@ -22,8 +22,9 @@ export default function ProductScreen() {
                     <>
                         <View style={tw`py-2 flex-1 pb-2`}>
                             {
-                                filteredProducts.length == 0 ?
-                                    <ScrollView
+                                filteredProducts.length > 0 ?
+                                    <ScrollView>
+                                        <View
                                         style={{
                                             display: "flex",
                                             flexDirection: "row",
@@ -106,6 +107,7 @@ export default function ProductScreen() {
                                                 </Card>
                                             ))
                                         }
+                                    </View>
                                     </ScrollView>
                                     :
                                     <View
