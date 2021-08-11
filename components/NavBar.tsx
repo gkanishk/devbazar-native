@@ -1,31 +1,37 @@
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import tw from "tailwind-react-native-classnames";
 import EvilIcon from "react-native-vector-icons/EvilIcons";
 import { styles } from "./styles";
+const appLogo = require("../assets/logo.png");
 
 export default function NavBar() {
-    const navigation = useNavigation();
+    const navigation: any = useNavigation();
     return (
         <SafeAreaView
             style={styles.container}
         >
-            <Text style={tw`text-xl font-semibold`}
-                // @ts-ignore
+            <TouchableOpacity
                 onPress={() => navigation.navigate("Home")}
-            >Dev Bazar</Text>
+            >
+                <Image
+                    source={appLogo}
+                    style={{
+                        width: 75,
+                        height: 35
+                    }}
+                />
+            </TouchableOpacity>
             <View style={tw`flex flex-row`}>
                 <TouchableOpacity
-                    // @ts-ignore
                     onPress={() => navigation.navigate("WishList")}
                     style={tw`p-1 mr-2`}
                 >
                     <EvilIcon name="heart" size={28} color="black" />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    // @ts-ignore
                     onPress={() => navigation.navigate("Cart")}
                     style={tw`p-1`}
                 >
