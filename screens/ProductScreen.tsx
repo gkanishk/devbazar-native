@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, ScrollView, View, Dimensions, TouchableOpacity, Platform, Image } from "react-native";
+import { Text, ScrollView, View, Dimensions, TouchableOpacity, Platform, Image, ActivityIndicator } from "react-native";
 import { useAppSelector } from "../app/hook";
 import { getFilteredProduct } from "../features/Products/products.slice";
 import { Card, Button } from 'react-native-elements'
@@ -7,6 +7,7 @@ import tw from "tailwind-react-native-classnames";
 import AntIcon from "react-native-vector-icons/AntDesign";
 import ProductFooter from "../components/ProductFooter";
 import { useProductItems } from "../hooks/useProductItems";
+const noDataImage = require("../assets/nodata.png");
 
 
 export default function ProductScreen() {
@@ -19,10 +20,10 @@ export default function ProductScreen() {
             {
                 !isProductLoading ?
                     <>
-                        <ScrollView style={tw`py-2 flex-1 pb-2`}>
+                        <View style={tw`py-2 flex-1 pb-2`}>
                             {
-                                filteredProducts.length > 0 ?
-                                    <View
+                                filteredProducts.length == 0 ?
+                                    <ScrollView
                                         style={{
                                             display: "flex",
                                             flexDirection: "row",
@@ -105,7 +106,7 @@ export default function ProductScreen() {
                                                 </Card>
                                             ))
                                         }
-                                    </View>
+                                    </ScrollView>
                                     :
                                     <View
                                     style={{
@@ -115,17 +116,25 @@ export default function ProductScreen() {
                                         justifyContent: "center"
                                     }}
                                     >
-                                        <Text>No Product</Text>
+                                        <Image
+                                        source={noDataImage}
+                                        style={{
+                                            width: 200,
+                                            height: 200
+                                        }}
+                                        resizeMode="contain"
+                                        />
+                                        <Text style={tw`my-4 text-base`}>No Product</Text>
                                     </View>
                             }
-                        </ScrollView>
+                        </View>
                         {
                             Platform.OS !== "web" && <ProductFooter />
                         }
                     </>
-                    : <Text>
-                        Loading
-                    </Text>
+                    : <View style={tw`flex items-center justify-center flex-1`}>
+                        <ActivityIndicator color="#61DAFB" size="large" />
+                    </View>
             }
         </>
     )
