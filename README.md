@@ -4,7 +4,7 @@
     <h1 align="center" >DevBazar Native</h1>
 </p>
 
-**Dev Bazar is an ecommerce mobile app with cart, wishlist and facet filter features build on top of Typescript, Next.js, tailwind CSS and Ant-design.**
+**Dev Bazar is an ecommerce mobile app with cart, wishlist and facet filter features build on top of Typescript, React Native, Redux, tailwind CSS and React-Native-Element.**
 
 ### Live:
    - ![demo](/assets/devNative.gif)
