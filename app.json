@@ -2,6 +2,7 @@
   "expo": {
     "name": "devbazar-native",
     "slug": "devbazar-native",
+    "description": "Ecommerce mobile application build on top of React Native, Redux and react-native-elements. Please download EXPO app from app store or playstore and scan the QR code to view this application.",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
@@ -17,13 +18,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.gkanishk.devbazar-native"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.gkanishk.devbazarnative"
     },
     "web": {
       "favicon": "./assets/logo.png"
