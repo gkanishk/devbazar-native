@@ -16,11 +16,18 @@ Scan the QR code using Expo app from play store or App Store to view this applic
 
 
 ## Stacks used:
+
+### Frontend:
 - React-Native
 - TypeScript
 - Redux
 - Tailwind CSS
 - React-Native-Element
+
+### [Backend](https://github.com/gkanishk/dev-bazar-be):
+- Nest.js 
+- PostgreSQL 
+- TypeORM
 
 ![react](https://img.shields.io/badge/frontend-ReactNative-blue) ![hooks](https://img.shields.io/badge/state-Redux-purple) ![chart](https://img.shields.io/badge/style-tailwindcss-lightblue)
 
