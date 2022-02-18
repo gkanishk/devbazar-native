@@ -12,7 +12,7 @@
 ### Preview
 Scan the QR code using Expo app from play store or App Store to view this application.    
 
-![download](https://user-images.githubusercontent.com/33570551/129193257-c55ef1de-fb1c-404f-9d29-8e8e348a5182.png)
+![download](https://qr.expo.dev/expo-go?owner=gkanishk&slug=devbazar-native&releaseChannel=default&host=exp.host)
 
 
 ## Stacks used:
