@@ -5,9 +5,11 @@ import tw from "tailwind-react-native-classnames";
 import { useAppSelector } from "../../app/hook";
 import { getCart } from "../../features/User/user.slice";
 import { useProductItems } from "../../hooks/useProductItems";
-import {quantityOptions, sizesOption} from "../../assets/filter";
-// @ts-ignore
-import SelectInput from 'react-native-select-input-ios';
+import { quantityOptions, sizesOption } from "../../assets/filter";
+import RNPickerSelect from 'react-native-picker-select';
+import FAIcon from "react-native-vector-icons/FontAwesome";
+
+
 
 
 
@@ -22,7 +24,7 @@ export default function ListCartItems() {
         getPriceDetails,
         placeOrder
     } = useProductItems(userState);
-    
+
 
     return (
         <View>
@@ -111,30 +113,50 @@ export default function ListCartItems() {
                                 >
                                     <View style={tw`flex flex-row items-center`}>
                                         <Text>Qty:</Text>
-                                        <SelectInput
+                                        <RNPickerSelect
                                             value={count}
-                                            options={quantityOptions.slice(0,quantity)}
+                                            onValueChange={(value) => updateItemCount(value, index)}
+                                            items={quantityOptions.slice(0, quantity)}
                                             style={{
-                                                width: Platform.OS === "ios" ? 30 : 90,
-                                                padding: 0,
-                                                margin: 0,
-                                                marginLeft: 5
+                                                viewContainer: {
+                                                    marginLeft: 5,
+                                                    width: 40
+                                                },
+                                                iconContainer: {
+                                                    marginTop: 2,
+                                                    marginRight: 8
+                                                }
                                             }}
-                                            onSubmitEditing={(value: number) => { updateItemCount(value, index) }}
+                                            Icon={() => {
+                                                return <FAIcon
+                                                    name="chevron-down"
+                                                    size={10}
+                                                />
+                                            }}
                                         />
                                     </View>
-                                    <View style={tw`flex flex-row items-center`}>
+                                    <View style={tw`flex flex-row items-center ml-2`}>
                                         <Text>Size:</Text>
-                                        <SelectInput
+                                        <RNPickerSelect
                                             value={sizes[0]}
-                                            options={sizesOption}
+                                            items={sizesOption}
+                                            onValueChange={(value: string) => console.log(value)}
                                             style={{
-                                                width: Platform.OS === "ios" ? 30 : 90,
-                                                padding: 0,
-                                                margin: 0,
-                                                marginLeft: 5
+                                                viewContainer: {
+                                                    marginLeft: 5,
+                                                    width: 40
+                                                },
+                                                iconContainer: {
+                                                    marginTop: 2,
+                                                    marginRight: 8
+                                                }
                                             }}
-                                            onSubmitEditing={(value: string) => console.log(value)}
+                                            Icon={() => {
+                                                return <FAIcon
+                                                    name="chevron-down"
+                                                    size={10}
+                                                />
+                                            }}
                                         />
                                     </View>
                                 </View>
@@ -165,7 +187,7 @@ export default function ListCartItems() {
                     ))
                 }
                 <Card
-                containerStyle={tw`px-4`}
+                    containerStyle={tw`px-4`}
                 >
                     <Text style={tw`mb-2 font-semibold`}>
                         PRICE DETAILS ({getPriceDetails().itemCount} ITEM)
@@ -180,17 +202,17 @@ export default function ListCartItems() {
                     </View>
                     <View style={tw`flex flex-row items-center justify-between`}>
                         <Text>Shipping Charge</Text>
-                        <Text>{getPriceDetails().shippingCost>0?getPriceDetails().shippingCost:"FREE"}</Text>
+                        <Text>{getPriceDetails().shippingCost > 0 ? getPriceDetails().shippingCost : "FREE"}</Text>
                     </View>
                     <View style={tw`flex flex-row items-center justify-between my-2`}>
                         <Text>Total Amount</Text>
                         <Text style={tw`font-semibold`}>Rs. {getPriceDetails().finalAmount}</Text>
                     </View>
                     <Button
-                    title="Place Order"
-                    buttonStyle={tw`bg-red-500 py-1 my-2`}
-                    titleStyle={tw`text-base`}
-                    onPress={placeOrder}
+                        title="Place Order"
+                        buttonStyle={tw`bg-red-500 py-1 my-2`}
+                        titleStyle={tw`text-base`}
+                        onPress={placeOrder}
                     />
                 </Card>
             </View>
