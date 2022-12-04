@@ -36,7 +36,7 @@ export default function WishListScreen() {
                         <Button
                             title="Login"
                             type="outline"
-                            containerStyle={tw`mt-4`}
+                            containerStyle={tw`mt-4 mb-4`}
                             buttonStyle={tw`px-6 py-1`}
                             // @ts-ignore
                             onPress={() => navigation.navigate("Login", { referer: "WishList" })}

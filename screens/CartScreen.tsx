@@ -15,7 +15,7 @@ export default function CartScreen() {
             {
                 isUserLoginned ?
                     <View style={tw`flex flex-1 p-2`}>
-                        <UserCart/>
+                        <UserCart />
                     </View> :
                     <View style={tw`flex items-center flex-1 justify-center`}>
                         <Text style={tw`text-lg font-bold`}>
@@ -36,10 +36,10 @@ export default function CartScreen() {
                         <Button
                             title="Login"
                             type="outline"
-                            containerStyle={tw`mt-4`}
+                            containerStyle={tw`mb-4 mt-4`}
                             buttonStyle={tw`px-6 py-1`}
                             // @ts-ignore
-                            onPress={() => naavigation.navigate("Login",{referer: "Cart"})}
+                            onPress={() => naavigation.navigate("Login", { referer: "Cart" })}
                         />
                     </View>
             }
