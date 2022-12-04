@@ -10,9 +10,6 @@ import RNPickerSelect from 'react-native-picker-select';
 import FAIcon from "react-native-vector-icons/FontAwesome";
 
 
-
-
-
 export default function ListCartItems() {
     const userState = useAppSelector((state) => state.user)
     const cartItems = useAppSelector(getCart);
@@ -22,7 +19,8 @@ export default function ListCartItems() {
         moveToWishList,
         updateItemCount,
         getPriceDetails,
-        placeOrder
+        placeOrder,
+        updateItemSize
     } = useProductItems(userState);
 
 
@@ -40,7 +38,7 @@ export default function ListCartItems() {
                 }}
             >
                 {
-                    cartItems.map(({ item: { id, discount, quantity, name, price, attributes: { img, brand, sizes } }, count }, index) => (
+                    cartItems.map(({ item: { id, discount, quantity, name, price, attributes: { img, brand, sizes } }, count, selectedSize }, index) => (
                         <Card
                             containerStyle={tw`bg-white`}
                             wrapperStyle={tw`flex flex-row`}
@@ -109,7 +107,7 @@ export default function ListCartItems() {
                                     Deliver By: {getDeliveryDate()}
                                 </Text>
                                 <View
-                                    style={tw`flex flex-row justify-start mt-2 items-center`}
+                                    style={[tw`flex flex-row justify-start items-center`, { marginTop: Platform.OS === 'ios' ? 4 : -4 }]}
                                 >
                                     <View style={tw`flex flex-row items-center`}>
                                         <Text>Qty:</Text>
@@ -120,43 +118,45 @@ export default function ListCartItems() {
                                             style={{
                                                 viewContainer: {
                                                     marginLeft: 5,
-                                                    width: 40
+                                                    width: Platform.OS === 'ios' ? 40 : 80
                                                 },
                                                 iconContainer: {
                                                     marginTop: 2,
                                                     marginRight: 8
                                                 }
                                             }}
-                                            Icon={() => {
-                                                return <FAIcon
+                                            Icon={() => Platform.select({
+                                                ios: <FAIcon
                                                     name="chevron-down"
                                                     size={10}
-                                                />
-                                            }}
+                                                />,
+                                                default: null
+                                            })}
                                         />
                                     </View>
                                     <View style={tw`flex flex-row items-center ml-2`}>
                                         <Text>Size:</Text>
                                         <RNPickerSelect
-                                            value={sizes[0]}
+                                            value={selectedSize ?? sizes[0]}
                                             items={sizesOption}
-                                            onValueChange={(value: string) => console.log(value)}
+                                            onValueChange={(value: string) => updateItemSize(value, index)}
                                             style={{
                                                 viewContainer: {
                                                     marginLeft: 5,
-                                                    width: 40
+                                                    width: Platform.OS === 'ios' ? 40 : 80
                                                 },
                                                 iconContainer: {
                                                     marginTop: 2,
                                                     marginRight: 8
                                                 }
                                             }}
-                                            Icon={() => {
-                                                return <FAIcon
+                                            Icon={() => Platform.select({
+                                                ios: <FAIcon
                                                     name="chevron-down"
                                                     size={10}
-                                                />
-                                            }}
+                                                />,
+                                                default: null
+                                            })}
                                         />
                                     </View>
                                 </View>

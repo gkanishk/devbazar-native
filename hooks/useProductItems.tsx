@@ -1,72 +1,72 @@
 import { getAxiosClient } from "./useAxios";
 import React from "react";
-import {store} from "../app/store";
+import { store } from "../app/store";
 import { useToast } from "react-native-styled-toast";
 import { useNavigation } from "@react-navigation/core";
 import { setCart, setWishlist, userStateType } from "../features/User/user.slice";
 
 
-export const useProductItems=({cart,wishList,isLoggined,accessToken}:userStateType)=>{
+export const useProductItems = ({ cart, wishList, isLoggined, accessToken }: userStateType) => {
     const { toast } = useToast();
     const navigation: any = useNavigation();
-    const isItemInCart=(id:string)=>{
-        return cart.some(({item:{id:productId}})=>id===productId);
+    const isItemInCart = (id: string) => {
+        return cart.some(({ item: { id: productId } }) => id === productId);
     }
 
-    const isItemInWishList=(id:string)=>{
-        return wishList.some(({item:{id:productId}})=>id===productId);
+    const isItemInWishList = (id: string) => {
+        return wishList.some(({ item: { id: productId } }) => id === productId);
     }
 
-    const getDiscounterPrice = (price:number, disc: number) => {
+    const getDiscounterPrice = (price: number, disc: number) => {
         return Math.round(price - ((disc / 100) * price));
     }
 
-    const getDeliveryDate=()=> {
-        const options:any = { year: 'numeric', month: 'long', day: 'numeric' };
+    const getDeliveryDate = () => {
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
         const currentDate = new Date();
-        const date = new Date(currentDate.setDate(currentDate.getDate() + 5)).toLocaleString(undefined,options);
+        const date = new Date(currentDate.setDate(currentDate.getDate() + 5)).toLocaleString(undefined, options);
         return date;
     }
 
-    const addToCartWishList = async (productId:string, type: 'addToCart' | 'addToWishList') => {
+    const addToCartWishList = async (productId: string, type: 'addToCart' | 'addToWishList') => {
         if (!isLoggined)
-            return navigation.navigate("Login",{referer: "Product"});
+            return navigation.navigate("Login", { referer: "Product" });
         try {
             const { data } = await getAxiosClient(accessToken).post(`/user/${type}`, { productId })
             if (type === "addToCart") {
-                const btn =( React.createElement("a", { href: "/cart" },"Go To Cart"));
+                const btn = (React.createElement("a", { href: "/cart" }, "Go To Cart"));
                 store.dispatch(setCart(data?.response?.wishList ?? []));
                 toast({
                     message: "Added to Cart",
                 })
-            } else {       
+            } else {
                 store.dispatch(setWishlist(data?.response?.wishList ?? []));
                 toast({
                     message: "Added to Wishlist"
                 })
             }
-        } catch (error){
+        } catch (error) {
             toast({
-                message: error.response?.data?.message??"Operation failed",
+                message: error.response?.data?.message ?? "Operation failed",
                 intent: "ERROR"
             });
         }
     }
 
-    const getwishListBody=(productId:string)=>{
-        const wishListBody:{productId:string}[] =[];
-        wishList.forEach(({item})=>{
-            if(item?.id!==productId)
-            wishListBody.push({productId: item.id})
+    const getwishListBody = (productId: string) => {
+        const wishListBody: { productId: string }[] = [];
+        wishList.forEach(({ item }) => {
+            if (item?.id !== productId)
+                wishListBody.push({ productId: item.id })
         });
         return wishListBody;
     }
 
-    const removeFromWishList=async(productId: string,showNotification:boolean=false)=>{
-        const wishListItems = wishList.filter(({item})=>item.id!==productId);
-        await getAxiosClient(accessToken).post("/user/updateWishList",getwishListBody(productId));
+    const removeFromWishList = async (productId: string, showNotification: boolean = false) => {
+        const wishListItems = wishList.filter(({ item }) => item.id !== productId);
+        await getAxiosClient(accessToken).post("/user/updateWishList", getwishListBody(productId));
         store.dispatch(setWishlist([...wishListItems]));
-        if(showNotification) {
+        if (showNotification) {
             toast({
                 message: "Removes from Wishlist",
                 intent: "INFO"
@@ -74,35 +74,41 @@ export const useProductItems=({cart,wishList,isLoggined,accessToken}:userStateTy
         }
     }
 
-    const moveToCart=async(productId:string)=>{
+    const moveToCart = async (productId: string) => {
         // Remove from WishList
         await removeFromWishList(productId);
-        await addToCartWishList(productId,"addToCart");
+        await addToCartWishList(productId, "addToCart");
     }
 
-    const updateItemCount = async(count:number, index: number)=> {
+    const updateItemCount = (count: number, index: number) => {
         let tempCart = JSON.parse(JSON.stringify(cart));
-        tempCart[index].count=count;
+        tempCart[index].count = count;
         store.dispatch(setCart(tempCart));
     }
 
-    const removeFromCart = async(index:number,showNotification: boolean) =>{
+    const updateItemSize = (size: string, index: number) => {
+        let tempCart = JSON.parse(JSON.stringify(cart));
+        tempCart[index].selectedSize = size;
+        store.dispatch(setCart(tempCart));
+    }
+
+    const removeFromCart = async (index: number, showNotification: boolean) => {
         try {
-            const arr= [...cart];
+            const arr = [...cart];
             arr.splice(index, 1);
-            console.log(arr,index);
+            console.log(arr, index);
             store.dispatch(setCart(arr));
-            const cartBody: {productId: string, count: number}[] = [];
-            arr.forEach(({item,count})=>{
-                cartBody.push({productId: item.id,count})
+            const cartBody: { productId: string, count: number }[] = [];
+            arr.forEach(({ item, count }) => {
+                cartBody.push({ productId: item.id, count })
             })
-            await getAxiosClient(accessToken).post("/user/updateCart",cartBody);
-            if(showNotification) {
+            await getAxiosClient(accessToken).post("/user/updateCart", cartBody);
+            if (showNotification) {
                 toast({
                     message: "Item removed!"
                 });
             }
-        }catch (err) {
+        } catch (err) {
             toast({
                 message: "Operation Failed",
                 intent: "ERROR"
@@ -111,12 +117,12 @@ export const useProductItems=({cart,wishList,isLoggined,accessToken}:userStateTy
 
     }
 
-    const moveToWishList = async(id:string,index:number)=> {
-        removeFromCart(index,false);
-        await addToCartWishList(id,"addToWishList");
+    const moveToWishList = async (id: string, index: number) => {
+        removeFromCart(index, false);
+        await addToCartWishList(id, "addToWishList");
     }
 
-    const getPriceDetails = () =>{
+    const getPriceDetails = () => {
         const amount = {
             mrp: 0,
             totalDiscount: 0,
@@ -124,15 +130,15 @@ export const useProductItems=({cart,wishList,isLoggined,accessToken}:userStateTy
             finalAmount: 0,
             itemCount: 0
         }
-        cart.forEach(({item,count})=>{
+        cart.forEach(({ item, count }) => {
             amount.mrp += item.price * count;
             amount.itemCount += count;
         })
-        cart.forEach(({item:{price,discount}})=>{
-            amount.totalDiscount += Math.floor((price*discount)/100)
+        cart.forEach(({ item: { price, discount } }) => {
+            amount.totalDiscount += Math.floor((price * discount) / 100)
         });
         amount.finalAmount = amount.mrp - amount.totalDiscount;
-        if(amount.finalAmount<500){
+        if (amount.finalAmount < 500) {
             amount.finalAmount += 99;
             amount.shippingCost = 99;
         }
@@ -140,12 +146,12 @@ export const useProductItems=({cart,wishList,isLoggined,accessToken}:userStateTy
         return amount;
     }
 
-    const placeOrder = async() =>{
+    const placeOrder = async () => {
         toast({
             message: "Order placed, details will be mailed shortly."
         })
         store.dispatch(setCart([]));
-        await getAxiosClient(accessToken).post("/user/updateCart",[]);
+        await getAxiosClient(accessToken).post("/user/updateCart", []);
     }
 
     return {
@@ -160,6 +166,7 @@ export const useProductItems=({cart,wishList,isLoggined,accessToken}:userStateTy
         removeFromCart,
         moveToWishList,
         updateItemCount,
-        placeOrder
+        placeOrder,
+        updateItemSize
     }
 }
